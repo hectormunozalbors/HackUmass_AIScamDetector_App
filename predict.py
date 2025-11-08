@@ -20,5 +20,5 @@ def predict_phishing(text, vectorizer):
     # Predict
     prediction = model.predict(text_vec)[0]
     probability = model.predict_proba(text_vec)[0][prediction]
-    return prediction, probability
+    return {"prediction": prediction, "confidence":probability}
 
