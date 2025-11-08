@@ -1,17 +1,11 @@
-# test
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 import numpy as np
-import uvicorn
-from fastapi import FastAPI
-app = FastAPI()
 
-@app.post("/predict_phishing/")
-def main(email):
+def main():
     """
     Main function to train and evaluate the email phishing detection model.
     """
@@ -68,7 +62,11 @@ def main(email):
         print(f"Training with {subset_size} samples ({i * 10}% of data)... Test Accuracy: {accuracy:.3f}")
 
     # --- Test the prediction function ---
-    # change test emails to accept the input on the frontend 
+    test_emails = [
+        "URGENT: Your account has been suspended. Click here to verify.",
+        "Hi team, please find the attached report for our quarterly review.",
+        "Congratulations! You've won a prize. Please provide your details to claim $1,000,000."
+    ]
 
     # Final evaluation with the model trained on all data
     print("\n--- Final Model Evaluation ---")
@@ -76,20 +74,10 @@ def main(email):
     print("\nClassification Report:")
     print(classification_report(y_test, y_pred))
     print("\n--- Testing with sample emails ---")
-    # instead of checking for multiple test samples just checks one which it recieves from input and 
-    #returns prediction and confidence.
-    return predict_phishing(email, vectorizer, model)
-    
-
-def predict_phishing(text, vectorizer, model):
-    # Preprocess the input text
-    text = text.lower()  
-    # Vectorize 
-    text_vec = vectorizer.transform([text]) 
-    # Predict
-    prediction = model.predict(text_vec)[0]
-    probability = model.predict_proba(text_vec)[0][prediction]
-    return prediction, probability
+    for email in test_emails:
+        prediction, probability = predict_phishing(email, vectorizer, model)
+        result = "Phishing" if prediction == 1 else "Safe Email"
+        print(f"Email: '{email[:50]}...' -> Prediction: {result} (Confidence: {probability*100:.2f}%)")
 
 if __name__ == "__main__":
     main()
