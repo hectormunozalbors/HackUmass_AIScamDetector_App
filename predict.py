@@ -3,7 +3,6 @@ from fastapi import FastAPI
 import pickle
 app = FastAPI()
 
-@app.post("/load_model/")
 def load_model():
     params_file = open('model', 'rb')
     params = pickle.load(params_file)
