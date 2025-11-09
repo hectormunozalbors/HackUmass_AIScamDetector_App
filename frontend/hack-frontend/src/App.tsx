@@ -9,7 +9,6 @@ function App() {
   
   const [email,setEmail] = useState("");
   useEffect(()=>{
-    if(!email){return};
     fetch("http://localhost:8000/predict_phishing", {
       method: 'POST',
       headers: {
