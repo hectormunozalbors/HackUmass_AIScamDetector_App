@@ -3,6 +3,19 @@ from fastapi import FastAPI
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
 app = FastAPI()
+from  fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+class EmailInput(BaseModel):
+    data: dict
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/model")
 def load_model():
@@ -13,7 +26,7 @@ def load_model():
     model.set_params(params)
 
 @app.post("/predict_phishing/")
-def predict_phishing(data):
+def predict_phishing(data: EmailInput):
     # Preprocess the input text
     data.text = data.text.lower()  
     # Vectorize 
