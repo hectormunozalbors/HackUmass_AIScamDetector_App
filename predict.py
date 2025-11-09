@@ -18,13 +18,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/model")
-def load_model():
-    params_file = open('model', 'rb')
-    params = pickle.load(params_file)
-    global model
-    model = LogisticRegression()
-    model.set_params(params)
+params_file = open('model', 'rb')
+params = pickle.load(params_file)
+model = LogisticRegression()
+model.set_params(params)
 
 vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
 @app.post("/predict_phishing/")
