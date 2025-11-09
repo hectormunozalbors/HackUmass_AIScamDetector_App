@@ -5,11 +5,10 @@ interface Props{
     setEmail : (e : string) => void;
 }
 
-const SearchBar: React.FC<Props> = ({email,setEmail}) => {
+const SearchBar: React.FC<Props> = ({setEmail}) => {
     const [value,setValue] = useState("");
     const handleClick = () =>{
         setEmail(value);
-        console.log(email)
     }
     const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>{
         setValue(e.target.value);
