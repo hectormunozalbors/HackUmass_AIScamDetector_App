@@ -1,5 +1,6 @@
 from sklearn.linear_model import LogisticRegression
 from fastapi import FastAPI
+from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
 app = FastAPI()
 
@@ -12,11 +13,12 @@ def load_model():
     model.set_params(params)
 
 @app.post("/predict_phishing/")
-def predict_phishing(text, vectorizer):
+def predict_phishing(data):
     # Preprocess the input text
-    text = text.lower()  
+    data.text = data.text.lower()  
     # Vectorize 
-    text_vec = vectorizer.transform([text]) 
+    vectorizer = TfidfVectorizer(stop_words='english', max_features=5000)
+    text_vec = vectorizer.fit_transform([data.text]) 
     # Predict
     prediction = model.predict(text_vec)[0]
     probability = model.predict_proba(text_vec)[0][prediction]
